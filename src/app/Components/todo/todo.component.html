@@ -1,0 +1,57 @@
+<section class="todoList-wrapper bg-gray-100 py-8 px-4">
+    
+        <!-- Título de la aplicación -->
+        <h1 class="title font-bold mb-4">TODO APP</h1>
+    
+        <!-- Formulario para agregar una nueva tarea -->
+        <div class="flex items-center mb-4">
+            <input class=" text-gray-700  w-full mr-2 py-2 px-4 rounded border-gray-300" (keydown.enter)="addTodo()" type="text" placeholder="Escribe una Nueva Tarea" [formControl]="newTodo">
+            <button class="py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600" (click)="addTodo()">+</button>
+        </div>
+    
+        <!-- Filtros para mostrar todas las tareas, tareas activas o tareas completadas -->
+        <div class="flex mb-4">
+            <button class="mr-2 py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" (click)="changeFilter('all')" [class.active]="filter() === 'all'">Todos</button>
+            <button class="mr-2 py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" (click)="changeFilter('active')" [class.active]="filter() === 'active'">Activos</button>
+            <button class="mr-2 py-2 px-4 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" (click)="changeFilter('completed')" [class.active]="filter() === 'completed'">Completados</button>
+        </div>
+    
+        <!-- Lista de tareas -->
+        <ul class="todoList">
+    
+            <!-- Iteración sobre las tareas filtradas -->
+            @for (todo of todoListFiltered(); track todo.id) {
+    
+                <!-- Verificar si la tarea está en modo de edición -->
+                @if (todo.editing) {
+    
+                    <!-- Tarea en modo de edición -->
+                    <li class="todo-editing mb-2">
+                        <!-- Campo de texto para editar el título de la tarea -->
+                        <input class="w-full py-2 px-4 rounded border-gray-300" type="text" placeholder="Editar Tarea" [value]="todo.title" (keydown.enter)="saveTitleTodo(todo.id, $event)">
+                    </li>
+    
+                } @else {
+    
+                    <!-- Tarea no está en modo de edición -->
+                    <li class="todo flex items-center justify-between bg-white rounded shadow-md py-2 px-4 mb-2">
+                        
+                        <input type="checkbox" [checked]="todo.completed" (click)="toggleTodo(todo.id)">
+                        
+                        <label class="ml-2">{{todo.title}}</label>
+                        <!-- Botón para editar la tarea (solo visible si la tarea no está completada) -->
+                        @if (!todo.completed) {
+                            <button class="py-1 px-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300" (click)="updateTodoEditingMode(todo.id)">Editar</button>
+                        }
+                        <!-- Botón para eliminar la tarea -->
+                        <button class="py-1 px-2 bg-red-500 text-white rounded hover:bg-red-600" (click)="removeTodo(todo.id)">Eliminar</button>
+                    </li>
+    
+                }
+            }
+    
+        </ul>
+    
+</section>
+
+
